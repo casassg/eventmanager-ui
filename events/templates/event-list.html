@@ -2,27 +2,92 @@
 {% load static %}
 {% block title %}Event list{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'lib/tokenfield/css/bootstrap-tokenfield.min.css' %}">
+
+{% endblock %}
+
 {% block body %}
     {% for event in events %}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default margin-top">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ event.name }}</h3>
-                </div>
-                <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default margin-top">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ event.name }}</h3>
+                    </div>
+                    <div class="panel-body">
 
-                    <dl class="dl-horizontal">
-                        <dt>Keywords</dt>
-                        <dd>{{ event.code }}</dd>
-                    </dl>
+                        <dl class="dl-horizontal">
+                            <dt>Keywords</dt>
+                            <dd>{{ event.code }}</dd>
+                        </dl>
+                    </div>
+                    {#                <div class="panel-footer">#}
+                    {#                    <a href="{{ sheets_url }}" class="btn-block btn btn-default" target="_blank">Open Google Sheets</a>#}
+                    {#                </div>#}
                 </div>
-{#                <div class="panel-footer">#}
-{#                    <a href="{{ sheets_url }}" class="btn-block btn btn-default" target="_blank">Open Google Sheets</a>#}
-{#                </div>#}
+
             </div>
+        </div>
+    {% endfor %}
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-lg  margin-top" data-toggle="modal" data-target="#newEventModal">
+        Launch demo modal
+    </button>
 
+    <!-- Modal -->
+    <div class="modal fade" id="newEventModal" tabindex="-1" role="dialog" aria-labelledby="newEventModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add event</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <input name="name" type="text" class="form-control" id="name" placeholder="Event name"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="query" class="col-sm-2 control-label">Keywords</label>
+                            <div class="col-sm-10">
+                                <textarea name="query" rows="20" class="form-control" id="query"
+                                       required></textarea>
+                            </div>
+                        </div>
+
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Close"/>
+                        <input type="submit" class="btn btn-primary" value="Save changes"/>
+                    </form>
+
+                </div>
+            </div>
         </div>
     </div>
-    {% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'lib/tokenfield/bootstrap-tokenfield.min.js' %}"></script>
+    <script>
+        $(function () {
+            var $query = $('#query');
+            $query.tokenfield();
+            $query.on('tokenfield:createtoken', function (event) {
+                var existingTokens = $(this).tokenfield('getTokens');
+                $.each(existingTokens, function (index, token) {
+                    if (token.value === event.attrs.value)
+                        event.preventDefault();
+                });
+            });
+
+        });
+
+    </script>
 {% endblock %}

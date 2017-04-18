@@ -19,5 +19,5 @@ from django.contrib import admin
 from events import views as e_views
 
 urlpatterns = [
-    url(r'^events/$', e_views.get_events, name='event_list'),
+    url(r'^events/$', e_views.EventListView.as_view(), name='event_list'),
 ]
