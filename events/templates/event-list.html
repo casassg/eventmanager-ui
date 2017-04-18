@@ -7,6 +7,14 @@
 
 {% endblock %}
 
+{% block navbar_extra %}
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-default navbar-btn navbar-right" data-toggle="modal" data-target="#newEventModal">
+       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New event
+    </button>
+
+
+{% endblock %}
 {% block body %}
     {% for event in events %}
         <div class="row">
@@ -30,12 +38,8 @@
             </div>
         </div>
     {% endfor %}
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-lg  margin-top" data-toggle="modal" data-target="#newEventModal">
-        Launch demo modal
-    </button>
 
-    <!-- Modal -->
+
     <div class="modal fade" id="newEventModal" tabindex="-1" role="dialog" aria-labelledby="newEventModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
