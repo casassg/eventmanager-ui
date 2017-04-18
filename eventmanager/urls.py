@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from events import views as e_views
+
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^events/$', e_views.get_events, name='event_list'),
 ]
