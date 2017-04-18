@@ -15,11 +15,10 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-
+.DS_Store
 
 
 # Django stuff:
 *.log
 local_settings.py
-
 
