@@ -8,25 +8,37 @@
 {% endblock %}
 
 {% block navbar_extra %}
-    <button type="button" class="btn btn-default navbar-btn navbar-right" data-toggle="modal" data-target="#newEventModal">
-       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New event
+    <button type="button" class="btn btn-default navbar-btn navbar-right" data-toggle="modal"
+            data-target="#newEventModal">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New event
     </button>
 
 
 {% endblock %}
 {% block body %}
+    <div class="row">
+        {% for error in errors %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                {{ error }}
+            </div>
+        {% endfor %}
+    </div>
     {% for event in events %}
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-default margin-top">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ event.name }}</h3>
                     </div>
                     <div class="panel-body">
 
                         <dl class="dl-horizontal">
-                            <dt>Keywords</dt>
+                            <dt>Internal code</dt>
                             <dd>{{ event.code }}</dd>
+                            <dt>Keywords</dt>
+                            <dd>{{ event.query }}</dd>
                         </dl>
                     </div>
                 </div>
@@ -58,7 +70,7 @@
                             <label for="query" class="col-sm-2 control-label">Keywords</label>
                             <div class="col-sm-10">
                                 <textarea name="query" rows="20" class="form-control" id="query"
-                                       required></textarea>
+                                          required></textarea>
                             </div>
                         </div>
 

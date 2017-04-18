@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Events',
+            name='Event',
             fields=[
                 ('name', models.CharField(max_length=240)),
                 ('code', models.CharField(max_length=240, primary_key=True, serialize=False)),
