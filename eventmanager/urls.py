@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.views.generic import RedirectView
 
 from events import views as e_views
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(url='/events/', permanent=False), name='root'),
     url(r'^events/$', e_views.EventListView.as_view(), name='event_list'),
 ]
+
+from events import signals

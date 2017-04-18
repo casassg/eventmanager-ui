@@ -113,3 +113,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+KAFKA_SERVERS = os.environ.get('KAFKA_SERVERS', 'localhost:9092').split(',')

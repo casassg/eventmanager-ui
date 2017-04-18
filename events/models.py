@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 
@@ -15,5 +17,9 @@ class Event(models.Model):
         event = Event()
         event.name = name
         event.query = query
-        event.code = name.lower().replace(' ', '-')
+        event.code = name.lower().replace(' ', '-').replace('_', '-')
         event.save(force_insert=True)
+        return event
+
+    def to_dict(self):
+        return {'code': self.code, 'query': self.query, 'tracking': str(self.tracking_enabled)}
