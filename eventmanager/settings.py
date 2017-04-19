@@ -23,8 +23,10 @@ SECRET_KEY = 'hl46^m&j^ep02hg%dvssm5$f3luxa#m0pa5wac_nm5-x)h^6m)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', ]
+if os.environ.get('PROD', False):
+    DEBUG = False
+    ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -109,9 +111,17 @@ USE_L10N = True
 
 USE_TZ = True
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "events/static"),
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 KAFKA_SERVERS = os.environ.get('KAFKA_SERVERS', 'localhost:9092').split(',')
