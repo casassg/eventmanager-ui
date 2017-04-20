@@ -6,7 +6,7 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from kafka import KafkaProducer, SimpleClient
 
-from events import models, messages
+from events import models
 
 
 def create_message(type, action, data=None):
@@ -60,9 +60,9 @@ def kakfa_queries_check(sender, instance, **kwargs):
     )
     query = models.TwitterOutQuery.objects.first()
     new_keywords = get_new_keywords()
-    if query.query == new_keywords:
+    if query.queries == new_keywords:
         return
-    query.query = new_keywords
+    query.queries = new_keywords
     query.save()
     message = create_message('queries', 'update', new_keywords)
     try:
@@ -75,5 +75,5 @@ def kakfa_queries_check(sender, instance, **kwargs):
 
 
 def get_new_keywords():
-    queries = map(lambda x: x.lower().split(','), models.Event.objects.values('query'))
+    queries = map(lambda x: x['query'].lower().split(','), models.Event.objects.values('query'))
     return list(set(reduce(lambda x, y: x + y, queries)))
