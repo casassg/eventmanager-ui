@@ -23,3 +23,9 @@ class Event(models.Model):
 
     def to_dict(self):
         return {'code': self.code, 'query': self.query, 'tracking': str(self.tracking_enabled)}
+
+
+class TwitterOutQuery(models.Model):
+    queries = models.CharField(max_length=2000)
+
+

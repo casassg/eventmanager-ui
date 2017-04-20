@@ -125,3 +125,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 KAFKA_SERVERS = os.environ.get('KAFKA_SERVERS', 'localhost:9092').split(',')
+
+KAFKA_TOPIC = os.environ.get('KAFKA_TOPIC', 'events')
