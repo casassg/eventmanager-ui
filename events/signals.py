@@ -8,6 +8,13 @@ from kafka import KafkaProducer, SimpleClient
 
 from events import models
 
+TEST_TYPE = 'test'
+EVENT_TYPE = 'event'
+QUERIES_TYPE = 'queries'
+
+UPDATE_ACTION = 'update'
+IGNORE_ACTION = 'ignore'
+
 
 def create_message(type, action, data=None):
     return {
@@ -24,7 +31,7 @@ def kakfa_check(sender, instance, **kwargs):
         retries=5,
         value_serializer=lambda v: json.dumps(v).encode('utf-8')
     )
-    message = create_message('test', 'ignore')
+    message = create_message(TEST_TYPE, 'ignore')
     try:
         producer.send('events', message)
     except:
@@ -41,7 +48,7 @@ def kakfa_event_update(sender, instance, **kwargs):
         retries=5,
         value_serializer=lambda v: json.dumps(v).encode('utf-8')
     )
-    message = create_message('event', 'update', instance.to_dict())
+    message = create_message(EVENT_TYPE, 'update', instance.to_dict())
     try:
         producer.send(settings.KAFKA_TOPIC, message)
     except:
@@ -64,7 +71,7 @@ def kakfa_queries_check(sender, instance, **kwargs):
         return
     query.queries = new_keywords
     query.save()
-    message = create_message('queries', 'update', new_keywords)
+    message = create_message(QUERIES_TYPE, 'update', new_keywords)
     try:
         producer.send(settings.KAFKA_TOPIC, message)
     except:
