@@ -18,9 +18,9 @@ class EventListView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         name = request.POST.get('name', None)
-        query = request.POST.get('query', None)
+        tokens = request.POST.get('tokens', None)
         try:
-            models.Event.create(name, query)
+            models.Event.create(name, tokens)
         except IntegrityError:
             context = self.get_context_data()
             context.update({'errors': ['Event already exists with a similar name. Try a different name.', ]})

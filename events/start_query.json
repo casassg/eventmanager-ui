@@ -1,1 +1,9 @@
-[{"model": "events.twitteroutquery", "pk": 1, "fields": {"queries": ""}}]
+[
+  {
+    "model": "events.activetokens",
+    "pk": 1,
+    "fields": {
+      "tokens": ""
+    }
+  }
+]

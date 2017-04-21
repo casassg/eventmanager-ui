@@ -19,43 +19,31 @@ IGNORE_ACTION = 'ignore'
 
 @receiver(pre_save, sender=models.Event)
 def kakfa_check(sender, instance, **kwargs):
-    producer = get_producer()
     message = create_message(TEST_TYPE, 'ignore')
-    try:
-        logging.info('Checking connexion...')
-        producer.send(settings.KAFKA_TOPIC, message)
-    except:
-        client = SimpleClient(hosts=settings.KAFKA_SERVERS)
-        client.ensure_topic_exists(settings.KAFKA_TOPIC)
-        client.close()
-        producer.send(settings.KAFKA_TOPIC, message)
-    producer.close(10)
+    logging.info('Checking connexion...')
+    send_to_kafka(message)
 
 
 @receiver(post_save, sender=models.Event)
 def kakfa_event_update(sender, instance, **kwargs):
-    producer = get_producer()
     message = create_message(EVENT_TYPE, 'update', instance.to_dict())
-    try:
-        producer.send(settings.KAFKA_TOPIC, message)
-    except:
-        client = SimpleClient(hosts=settings.KAFKA_SERVERS)
-        client.ensure_topic_exists(settings.KAFKA_TOPIC)
-        client.close()
-        producer.send(settings.KAFKA_TOPIC, message)
-    producer.close(10)
+    send_to_kafka(message)
 
 
 @receiver(post_save, sender=models.Event)
-def kakfa_queries_check(sender, instance, **kwargs):
-    producer = get_producer()
-    query = models.TwitterOutQuery.objects.first()
-    new_keywords = get_new_keywords()
-    if query.queries == new_keywords:
+def kakfa_tokens_update(sender, instance, **kwargs):
+    active = models.ActiveTokens.objects.first()
+    new_tokens = get_new_keywords()
+    if active.tokens == new_tokens:
         return
-    query.queries = new_keywords
-    query.save()
-    message = create_message(QUERIES_TYPE, 'update', new_keywords)
+    active.tokens = new_tokens
+    active.save()
+    message = create_message(QUERIES_TYPE, 'update', new_tokens)
+    send_to_kafka(message)
+
+
+def send_to_kafka(message):
+    producer = get_producer()
     try:
         producer.send(settings.KAFKA_TOPIC, message)
     except:
@@ -84,5 +72,5 @@ def get_producer():
 
 
 def get_new_keywords():
-    queries = map(lambda x: x['query'].lower().split(','), models.Event.objects.values('query'))
-    return list(set(reduce(lambda x, y: x + y, queries)))
+    tokens = map(lambda x: x['tokens'].lower().split(','), models.Event.objects.values('tokens'))
+    return list(set(reduce(lambda x, y: x + y, tokens)))
