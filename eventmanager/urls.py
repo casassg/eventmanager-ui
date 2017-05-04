@@ -22,6 +22,7 @@ from events import views as e_views
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/events/', permanent=False), name='root'),
     url(r'^events/$', e_views.EventListView.as_view(), name='event_list'),
+    url(r'^action/refresh$', e_views.refresh_arch, name='refresh_arch'),
 ]
 
 from events import signals

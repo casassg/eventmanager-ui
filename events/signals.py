@@ -2,6 +2,7 @@ import json
 import logging
 from functools import reduce
 
+from django import dispatch
 from django.conf import settings
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -15,7 +16,7 @@ QUERIES_TYPE = 'queries'
 
 UPDATE_ACTION = 'update'
 IGNORE_ACTION = 'ignore'
-
+refresh_arch_signal = dispatch.Signal()
 
 @receiver(pre_save, sender=models.Event)
 def kakfa_check(sender, instance, **kwargs):
@@ -40,6 +41,16 @@ def kakfa_tokens_update(sender, instance, **kwargs):
     active.save()
     message = create_message(QUERIES_TYPE, 'update', new_tokens)
     send_to_kafka(message)
+
+
+@receiver(refresh_arch_signal, sender=models.Event)
+def refresh_arch(sender, **kwargs):
+    active = models.ActiveTokens.objects.first()
+    message = create_message(QUERIES_TYPE, 'update', active)
+    send_to_kafka(message)
+    for instance in models.Event.objects.all():
+        message = create_message(EVENT_TYPE, 'update', instance.to_dict())
+        send_to_kafka(message)
 
 
 def send_to_kafka(message):

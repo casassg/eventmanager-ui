@@ -1,13 +1,11 @@
 from django.db import IntegrityError
-from django.urls import reverse
-from django.views.generic import TemplateView
-
 from django.shortcuts import render, redirect
-
+from django.views.generic import TemplateView
 # Create your views here.
 from kafka.errors import NoBrokersAvailable, UnknownTopicOrPartitionError
 
 from events import models
+from events.signals import refresh_arch_signal
 
 
 class EventListView(TemplateView):
@@ -34,3 +32,8 @@ class EventListView(TemplateView):
             context.update({'errors': ['events topic doesn\'t exist!', ]})
             return render(request, self.template_name, context, status=403)
         return redirect('event_list')
+
+
+def refresh_arch(request):
+    refresh_arch_signal.send(sender=request)
+    return redirect('event_list')
