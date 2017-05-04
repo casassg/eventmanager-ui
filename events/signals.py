@@ -43,7 +43,7 @@ def kakfa_tokens_update(sender, instance, **kwargs):
     send_to_kafka(message)
 
 
-@receiver(refresh_arch_signal, sender=models.Event)
+@receiver(refresh_arch_signal)
 def refresh_arch(sender, **kwargs):
     active = models.ActiveTokens.objects.first()
     message = create_message(QUERIES_TYPE, 'update', active)
