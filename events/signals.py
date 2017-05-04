@@ -45,11 +45,11 @@ def kakfa_tokens_update(sender, instance, **kwargs):
 
 @receiver(refresh_arch_signal)
 def refresh_arch(sender, **kwargs):
-    active = models.ActiveTokens.objects.first()
-    message = create_message(QUERIES_TYPE, 'update', active)
+    active = get_new_keywords()
+    message = create_message(QUERIES_TYPE, 'refresh', active)
     send_to_kafka(message)
     for instance in models.Event.objects.all():
-        message = create_message(EVENT_TYPE, 'update', instance.to_dict())
+        message = create_message(EVENT_TYPE, 'refresh', instance.to_dict())
         send_to_kafka(message)
 
 
