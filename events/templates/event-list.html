@@ -89,7 +89,7 @@
     <script src="{% static 'lib/tokenfield/bootstrap-tokenfield.min.js' %}"></script>
     <script>
         $(function () {
-            var $query = $('#query');
+            var $query = $('#tokens');
             $query.tokenfield();
             $query.on('tokenfield:createtoken', function (event) {
                 var existingTokens = $(this).tokenfield('getTokens');
